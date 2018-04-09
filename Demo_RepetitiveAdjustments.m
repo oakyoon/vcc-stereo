@@ -17,20 +17,25 @@ try
 	% ADJUSTMENT CONF. & VARS.
 	frame_images = DefaultAdjFrames(pxpd);
 	adj_conf     = DefaultAdjConf(frame_images);
-	adj_conf.SwitchLimits = 2;
 	[scx, scy] = RectCenter(rect);
 	cxcy = [scx, scy; scx, scy];
 	% instruction
 	adj_conf.Instruction =  [ ...
 		'                  < Stereo Frames Adjustment >\n\n\n', ...
-		'ARROW keys move the frame in one eye.\n\n', ...
+		'ARROW keys move the flickering frame in one eye.\n\n', ...
 		'SPACE key switches the moving frame between the eyes.\n\n', ...
-		'This session will end after 6 adjustments (6 switches).\n\n' ...
+		'This procedure will be repeated six times.\n\n' ...
 		];
 	ShowAdjustmentInstruction(wptr, adj_conf, cxcy);
 	% ADJUSTMENT STARTS
 	for r = 1:3
 		cxcy_jitter = round((rand(2, 2) - .5) * 2 * pxpd);  % jitter
+		if r == 1
+			adj_conf.SwitchLimits = 4;
+		else
+			adj_conf.FlickerAfter = 0;
+			adj_conf.SwitchLimits = 2;
+		end
 		tmp_info(r) = AdjustStereoFramesImpl(wptr, adj_conf, cxcy + cxcy_jitter); %#ok<SAGROW>
 	end
 	lcx = round(mean(arrayfun(@(x) x.lcx, tmp_info)));

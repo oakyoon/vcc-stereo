@@ -12,7 +12,7 @@ function images = DotFrames_Grid(varargin)
 
 	dot_size    = dot_size * pxpd;
 	dot_spacing = round(dot_spacing * pxpd);
-	frame_size  = ([dot_rows, dot_cols] + 1) * dot_spacing;
+	frame_size  = [dot_rows, dot_cols] * dot_spacing;
 	cross_r     = cross_r * pxpd;
 	cross_t     = cross_t * pxpd;
 
@@ -22,7 +22,7 @@ function images = DotFrames_Grid(varargin)
 		for yy = 1:dot_rows
 			if (xx ~= (dot_cols * .5 + .5)) || (yy ~= (dot_rows * .5 + .5))
 				[mx, my] = meshgrid(1:frame_size);
-				mecc = xy2ecc(mx - (xx * dot_spacing), my - (yy * dot_spacing));
+				mecc = xy2ecc(mx - ((xx - .5) * dot_spacing), my - ((yy - .5) * dot_spacing));
 				dmat = mk_shape(mecc, dot_size);
 				alpha_dots = apply_alpha(alpha_dots, ones(frame_size), dmat);
 			end
